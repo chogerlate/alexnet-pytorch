@@ -154,6 +154,8 @@ def train(
     loss_fn: A PyTorch loss function to calculate loss on both datasets.
     epochs: An integer indicating how many epochs to train for.
     device: A target device to compute on (e.g. "cuda" or "cpu").
+    target_dir (str): directory to save the model.
+    model_name (str): model name
 
     Returns:
     A dictionary of training and testing loss as well as training and

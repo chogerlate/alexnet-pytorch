@@ -17,6 +17,13 @@ class SaveBestModel:
     """
 
     def __init__(self, target_dir: str, model_name: str, best_valid_loss=float("inf")):
+      """
+      Save the best model while training.
+      Args:
+          target_dir (str): directory to save the model.
+          model_name (str): model name 
+          best_valid_loss (_type_, optional): _description_. Defaults to float("inf").
+      """
         self.best_valid_loss = best_valid_loss
         # Create target directory
         self.target_dir_path = Path(target_dir)
@@ -55,7 +62,10 @@ def save_model(
     """Saves a PyTorch model to a target directory.
 
     Args:
+    epoch: The end epoch number.
     model: A target PyTorch model to save.
+    optimizer: A PyTorch optimizer used to train the model.
+    loss_fn: A PyTorch loss function used to train the model.
     target_dir: A directory for saving the model to.
     model_name: A filename for the saved model. Should include
       either ".pth" or ".pt" as the file extension.
@@ -93,6 +103,14 @@ def save_plots(
 ):
     """
     Function to save the loss and accuracy plots to disk.
+
+    Args:
+    train_acc: A list of training accuracies.
+    valid_acc: A list of validation accuracies.
+    train_loss: A list of training losses.
+    valid_loss: A list of validation losses.
+    target_dir: A directory for saving the plots to.
+
     """
     # Create target directory
     target_dir_path = Path(target_dir)
