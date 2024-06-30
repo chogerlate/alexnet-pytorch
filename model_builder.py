@@ -24,41 +24,41 @@ class AlexNet(nn.Module):
         self.conv_block_1 = nn.Sequential(
             nn.Conv2d(
                 in_channels=3, out_channels=96, kernel_size=11, stride=4, padding=0
-            ),  #  -> (b, 55, 55, 3)
-            nn.ReLU(),  # -> (b, 55, 55, 96)
+            ),  #  -> (b, 3, 55, 55)
+            nn.ReLU(),  # -> (b, 96, 55, 55)
             nn.LocalResponseNorm(
                 alpha=1e-4, beta=0.75, k=2, size=5
-            ),  # apply LRN -> (b, 27, 27, 96)
-            nn.MaxPool2d(kernel_size=3, stride=2),  # -> (b, 27, 27, 96)
+            ),  # apply LRN -> (b, 96, 27, 27)
+            nn.MaxPool2d(kernel_size=3, stride=2),  # -> (b, 96, 27, 27)
         )
         self.conv_block_2 = nn.Sequential(
             nn.Conv2d(
                 in_channels=96, out_channels=256, kernel_size=5, padding=2
-            ),  # -> (b, 27, 27, 256)
-            nn.ReLU(),  # -> (b, 13, 13, 256)
+            ),  # -> (b, 256, 27, 27)
+            nn.ReLU(),  # -> (b, 256, 13, 13 )
             nn.LocalResponseNorm(
                 alpha=1e-4, beta=0.75, k=2, size=5
-            ),  # apply LRN -> (b, 13, 13, 256)
-            nn.MaxPool2d(kernel_size=3, stride=2),  # -> (b, 13, 13, 256)
+            ),  # apply LRN -> (b, 256, 13, 13)
+            nn.MaxPool2d(kernel_size=3, stride=2),  # -> (b, 256, 13, 13)
         )
         self.conv_block_3 = nn.Sequential(
             nn.Conv2d(
                 in_channels=256, out_channels=384, kernel_size=3, padding=1
-            ),  # -> (b, 13, 13, 384)
-            nn.ReLU(),  # -> (b, 13, 13, 384)
+            ),  # -> (b, 384, 13, 13)
+            nn.ReLU(),  # -> (b, 384, 13, 13 )
         )
         self.conv_block_4 = nn.Sequential(
             nn.Conv2d(
                 in_channels=384, out_channels=384, kernel_size=3, padding=1
-            ),  # -> (b, 13, 13, 384)
-            nn.ReLU(),  # -> (b, 13, 13, 384)
+            ),  # -> (b, 384, 13, 13)
+            nn.ReLU(),  # -> (b, , 384, 13, 13)
         )
         self.conv_block_5 = nn.Sequential(
             nn.Conv2d(
                 in_channels=384, out_channels=256, kernel_size=3, padding=1
-            ),  # -> (b, 13, 13, 384)
-            nn.ReLU(),  # -> (b, 13, 13, 384)
-            nn.MaxPool2d(kernel_size=3, stride=2),  # -> (b, 6, 6, 256)
+            ),  # -> (b, 256, 13, 13)
+            nn.ReLU(),  # -> (b, 256, 13, 13)
+            nn.MaxPool2d(kernel_size=3, stride=2),  # -> (b, 256, 6, 6)
         )
 
         self.classifier = nn.Sequential(
