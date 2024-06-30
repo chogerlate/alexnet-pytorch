@@ -37,7 +37,7 @@ def train(
     # Create transforms
     train_transform = v2.Compose(
         [
-            v2.Resize((224, 224)),
+            v2.Resize((227, 227)),
             # v2.GaussianBlur(kernel_size=3, sigma=(0.1, 2.0)),
             v2.RandomVerticalFlip(p=0.5),
             v2.RandomHorizontalFlip(p=0.5),
@@ -50,7 +50,7 @@ def train(
 
     test_transform = v2.Compose(
         [
-            v2.Resize((224, 224)),
+            v2.Resize((227, 227)),
             v2.ToImage(),
             v2.ToDtype(torch.float32, scale=True),
             v2.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),

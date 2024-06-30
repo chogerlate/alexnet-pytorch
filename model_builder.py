@@ -23,7 +23,7 @@ class AlexNet(nn.Module):
         self.num_classes = num_classes
         self.conv_block_1 = nn.Sequential(
             nn.Conv2d(
-                in_channels=3, out_channels=96, kernel_size=11, stride=4, padding=2
+                in_channels=3, out_channels=96, kernel_size=11, stride=4, padding=0
             ),  #  -> (b, 55, 55, 3)
             nn.ReLU(),  # -> (b, 55, 55, 96)
             nn.LocalResponseNorm(
