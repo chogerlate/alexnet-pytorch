@@ -199,7 +199,7 @@ def train(
             f"train_loss: {train_loss:.4f} | "
             f"train_acc: {train_acc:.4f} | "
             f"test_loss: {test_loss:.4f} | "
-            f"test_acc: {test_acc:.4f}"
+            f"test_acc: {test_acc:.4f} | "
         )
         save_best_model(test_loss, epoch, model, optimizer, loss_fn)
 
@@ -219,4 +219,107 @@ def train(
     )
     print("TRAINING COMPLETE")
     # Return the filled results at the end of the epochs
+    return results
+
+
+def one_batch_fit(
+    model: torch.nn.Module,
+    train_dataloader: torch.utils.data.DataLoader,
+    test_dataloader: torch.utils.data.DataLoader,
+    optimizer: torch.optim.Optimizer,
+    loss_fn: torch.nn.Module,
+    epochs: int,
+    device: torch.device,
+    target_dir: str,
+    model_name: str,
+) -> Dict[str, list]:
+    """
+    Train and evaluate a model on a single batch for multiple epochs.
+
+    Args:
+    model: A PyTorch model to be trained and tested.
+    train_dataloader: A DataLoader instance for the model to be trained on.
+    test_dataloader: A DataLoader instance for the model to be tested on.
+    optimizer: A PyTorch optimizer to help minimize the loss function.
+    loss_fn: A PyTorch loss function to calculate loss on both datasets.
+    epochs: An integer indicating how many epochs to train for.
+    device: A target device to compute on (e.g. "cuda" or "cpu").
+    target_dir: Directory to save the model.
+    model_name: Model name for saving.
+
+    Returns:
+    A dictionary containing lists of training and testing metrics per epoch.
+    """
+    # Create empty results dictionary
+    results = {"train_loss": [], "train_acc": [], "test_loss": [], "test_acc": []}
+
+    # Make sure model is on target device
+    model.to(device)
+
+    # Initialize SaveBestModel class
+    save_best_model = SaveBestModel(target_dir=target_dir, model_name=model_name)
+
+    # Get a single batch from train_dataloader
+    x, y = next(iter(test_dataloader))
+    x, y = x.to(device), y.to(device)
+
+    # Get a single batch from test_dataloader
+    # test_x, test_y = next(iter(test_dataloader))
+    # test_x, test_y = test_x.to(device), test_y.to(device)
+
+    # Loop through training and testing steps for a number of epochs
+    for epoch in tqdm(range(epochs)):
+        # Training
+        model.train()
+        y_pred = model(x)
+        loss = loss_fn(y_pred, y)
+        train_loss = loss.item()
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        y_pred_class = torch.argmax(torch.softmax(y_pred, dim=1), dim=1)
+        train_acc = (y_pred_class == y).sum().item() / len(y)
+
+        # Testing
+        model.eval()
+        with torch.inference_mode():
+            test_pred_logits = model(x)
+            test_loss = loss_fn(test_pred_logits, y).item()
+            test_pred_class = test_pred_logits.argmax(dim=1)
+            test_acc = (test_pred_class == y).sum().item() / len(y)
+
+        # Print progress
+        print(
+            f"Epoch: {epoch+1} | "
+            f"train_loss: {train_loss:.4f} | "
+            f"train_acc: {train_acc:.4f} | "
+            f"test_loss: {test_loss:.4f} | "
+            f"test_acc: {test_acc:.4f}"
+        )
+
+        # Save best model
+        save_best_model(test_loss, epoch, model, optimizer, loss_fn)
+
+        # Update results dictionary
+        results["train_loss"].append(train_loss)
+        results["train_acc"].append(train_acc)
+        results["test_loss"].append(test_loss)
+        results["test_acc"].append(test_acc)
+
+    # Save final model
+    save_model(epochs, model, optimizer, loss_fn, target_dir, model_name)
+
+    # Save plots
+    save_plots(
+        results["train_acc"],
+        results["test_acc"],
+        results["train_loss"],
+        results["test_loss"],
+        prefix="one_batch_fit_",
+    )
+
+    print("TRAINING COMPLETE")
+
     return results

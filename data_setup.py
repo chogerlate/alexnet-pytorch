@@ -6,7 +6,8 @@ Modified from: https://www.learnpytorch.io/
 
 import os
 
-from torchvision import datasets, transforms
+from torchvision import datasets
+from torchvision.transforms import v2
 from torch.utils.data import DataLoader
 
 NUM_WORKERS = os.cpu_count()
@@ -15,7 +16,8 @@ NUM_WORKERS = os.cpu_count()
 def create_dataloaders(
     train_dir: str,
     test_dir: str,
-    transform: transforms.Compose,
+    train_transform: v2.Compose,
+    test_transform: v2.Compose,
     batch_size: int,
     num_workers: int = NUM_WORKERS,
 ):
@@ -27,7 +29,8 @@ def create_dataloaders(
   Args:
     train_dir: Path to training directory.
     test_dir: Path to testing directory.
-    transform: torchvision transforms to perform on training and testing data.
+    train_transform: torchvision transforms to perform on training data.
+    test_transform: torchvision transforms to perform on testing data.
     batch_size: Number of samples per batch in each of the DataLoaders.
     num_workers: An integer for number of workers per DataLoader.
 
@@ -43,8 +46,8 @@ def create_dataloaders(
                              num_workers=4)
   """
     # Use ImageFolder to create dataset(s)
-    train_data = datasets.ImageFolder(train_dir, transform=transform)
-    test_data = datasets.ImageFolder(test_dir, transform=transform)
+    train_data = datasets.ImageFolder(train_dir, transform=train_transform)
+    test_data = datasets.ImageFolder(test_dir, transform=test_transform)
 
     # Get class names
     class_names = train_data.classes

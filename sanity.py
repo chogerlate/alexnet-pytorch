@@ -13,7 +13,7 @@ app = typer.Typer()
 
 @app.command()
 def train(
-    num_epochs: int = typer.Option(20, help="Number of training epochs"),
+    num_epochs: int = typer.Option(50, help="Number of training epochs"),
     batch_size: int = typer.Option(64, help="Batch size for training"),
     learning_rate: float = typer.Option(0.001, help="Learning rate for optimizer"),
     momentum: float = typer.Option(0, help="momentum for sdg optimizer"),
@@ -83,7 +83,7 @@ def train(
     )
 
     # Start training
-    engine.train(
+    engine.one_batch_fit(
         model=model,
         train_dataloader=train_dataloader,
         test_dataloader=test_dataloader,

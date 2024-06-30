@@ -17,13 +17,13 @@ class SaveBestModel:
     """
 
     def __init__(self, target_dir: str, model_name: str, best_valid_loss=float("inf")):
-      """
-      Save the best model while training.
-      Args:
-          target_dir (str): directory to save the model.
-          model_name (str): model name 
-          best_valid_loss (_type_, optional): _description_. Defaults to float("inf").
-      """
+        """
+        Save the best model while training.
+        Args:
+            target_dir (str): directory to save the model.
+            model_name (str): model name
+            best_valid_loss (_type_, optional): _description_. Defaults to float("inf").
+        """
         self.best_valid_loss = best_valid_loss
         # Create target directory
         self.target_dir_path = Path(target_dir)
@@ -99,7 +99,12 @@ def save_model(
 
 
 def save_plots(
-    train_acc, valid_acc, train_loss, valid_loss, target_dir: str = "outputs"
+    train_acc,
+    valid_acc,
+    train_loss,
+    valid_loss,
+    target_dir: str = "outputs",
+    prefix: str = "",
 ):
     """
     Function to save the loss and accuracy plots to disk.
@@ -123,7 +128,10 @@ def save_plots(
     plt.xlabel("Epochs")
     plt.ylabel("Accuracy")
     plt.legend()
-    plt.savefig("outputs/accuracy.png")
+    if prefix:
+        plt.savefig(f"{target_dir}/{prefix}_accuracy.png")
+    else:
+        plt.savefig(f"{target_dir}/accuracy.png")
 
     # loss plots
     plt.figure(figsize=(10, 7))
@@ -132,4 +140,7 @@ def save_plots(
     plt.xlabel("Epochs")
     plt.ylabel("Loss")
     plt.legend()
-    plt.savefig("outputs/loss.png")
+    if prefix:
+        plt.savefig(f"{target_dir}/{prefix}_loss.png")
+    else:
+        plt.savefig(f"{target_dir}/loss.png")

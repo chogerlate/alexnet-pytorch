@@ -13,6 +13,10 @@ This project implements AlexNet, a pioneering convolutional neural network archi
 - Training script with command-line arguments using Typer
 - Support for custom datasets
 
+## Getting Started
+```
+git clone git@github.com:chogerlate/alexnet-pytorch.git
+```
 
 ## Install the required packages using:
 ```
